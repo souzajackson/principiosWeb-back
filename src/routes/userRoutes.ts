@@ -5,18 +5,8 @@ const router = Router();
 const repo = new UserRepository();
 
 router.post("/", async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-
-    const user = await repo.createUser(name, email, password);
-    return res.status(201).json(user);
-
-  } catch (error: any) {
-    return res.status(500).json({
-      message: "Erro ao criar usuário",
-      error: error.message
-    });
-  }
+  const user = await repo.createUser(req.body);
+  res.status(201).json(user);
 });
 
 router.get("/", async (_, res) => {

@@ -8,6 +8,10 @@ import adoptionRoutes from "./routes/adoptionRoutes";
 import donationRoutes from "./routes/donationRoutes";
 import visitRoutes from "./routes/visitRoutes";
 
+import sequelize from "./config/database";
+
+sequelize.sync();
+
 // Inicializa o Express
 const app = express();
 
@@ -21,6 +25,8 @@ app.use("/animals", animalRoutes);
 app.use("/adoptions", adoptionRoutes);
 app.use("/donations", donationRoutes);
 app.use("/visits", visitRoutes);
+
+
 
 // Sobe o servidor
 const PORT = process.env.PORT || 3000;
