@@ -1,12 +1,12 @@
 import express from "express";
 
 // Rotas
-import userRoutes from "./routes/userRoutes";
-import shelterRoutes from "./routes/shelterRoutes";
-import animalRoutes from "./routes/animalRoutes";
-import adoptionRoutes from "./routes/adoptionRoutes";
-import donationRoutes from "./routes/donationRoutes";
-import visitRoutes from "./routes/visitRoutes";
+import userRoutes from "./routes/UserRoutes";
+import shelterRoutes from "./routes/ShelterRoutes";
+import animalRoutes from "./routes/AnimalRoutes";
+import adoptionRoutes from "./routes/AdoptionRoutes";
+import donationRoutes from "./routes/DonationRoutes";
+import visitRoutes from "./routes/VisitRoutes";
 
 import sequelize from "./config/database";
 

@@ -2,24 +2,14 @@ import { Model, DataTypes, Optional } from "sequelize";
 import sequelize from "../config/database";
 import { Shelter } from "./Shelter";
 
-export interface AnimalAttributes {
-  id: number;
-  name: string;
-  species: string;
-  age: number;
-  shelterId: number;
-}
 
-export interface AnimalCreationAttributes extends Optional<AnimalAttributes, "id"> {}
-
-export class Animal extends Model<AnimalAttributes, AnimalCreationAttributes>
-  implements AnimalAttributes
+export class Animal extends Model
 {
-  public id!: number;
-  public name!: string;
-  public species!: string;
-  public age!: number;
-  public shelterId!: number;
+  declare id: number;
+  declare name: string;
+  declare species: string;
+  declare age: number;
+  declare shelterId: number;
 }
 
 Animal.init(

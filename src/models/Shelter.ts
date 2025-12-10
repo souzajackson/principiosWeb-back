@@ -1,22 +1,13 @@
 import { Model, DataTypes, Optional } from "sequelize";
 import sequelize from "../config/database";
 
-export interface ShelterAttributes {
-  id: number;
-  name: string;
-  address: string;
-  phone: string;
-}
 
-export interface ShelterCreationAttributes extends Optional<ShelterAttributes, "id"> {}
-
-export class Shelter extends Model<ShelterAttributes, ShelterCreationAttributes>
-  implements ShelterAttributes
+export class Shelter extends Model
 {
-  public id!: number;
-  public name!: string;
-  public address!: string;
-  public phone!: string;
+  declare id: number;
+  declare name: string;
+  declare address: string;
+  declare phone: string;
 }
 
 Shelter.init(

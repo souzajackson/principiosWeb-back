@@ -1,4 +1,4 @@
-import { Shelter } from "../model/Shelter";
+import { Shelter } from "../models/Shelter";
 
 export class ShelterRepository {
 

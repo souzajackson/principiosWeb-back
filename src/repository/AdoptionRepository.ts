@@ -1,4 +1,4 @@
-import { Adoption } from "../model/Adoption";
+import { Adoption } from "../models/Adoption";
 
 export class AdoptionRepository {
 

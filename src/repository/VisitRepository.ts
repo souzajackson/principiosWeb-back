@@ -1,4 +1,4 @@
-import { Visit } from "../model/Visit";
+import { Visit } from "../models/Visit";
 
 export class VisitRepository {
 

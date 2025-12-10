@@ -1,4 +1,4 @@
-import { Donation } from "../model/Donation";
+import { Donation } from "../models/Donation";
 
 export class DonationRepository {
 
