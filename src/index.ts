@@ -9,6 +9,7 @@ import donationRoutes from "./routes/DonationRoutes";
 import visitRoutes from "./routes/VisitRoutes";
 
 import sequelize from "./config/database";
+import { errorHandler } from "./middleware/errorHandler";
 
 sequelize.sync();
 
@@ -26,6 +27,7 @@ app.use("/adoptions", adoptionRoutes);
 app.use("/donations", donationRoutes);
 app.use("/visits", visitRoutes);
 
+app.use(errorHandler);
 
 
 // Sobe o servidor
