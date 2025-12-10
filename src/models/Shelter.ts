@@ -2,8 +2,7 @@ import { Model, DataTypes, Optional } from "sequelize";
 import sequelize from "../config/database";
 
 
-export class Shelter extends Model
-{
+export class Shelter extends Model {
   declare id: number;
   declare name: string;
   declare address: string;

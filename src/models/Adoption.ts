@@ -12,7 +12,7 @@ Adoption.init(
   {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     userId: { type: DataTypes.INTEGER, allowNull: false },
-    animalId: { type: DataTypes.INTEGER, allowNull: false },
+    animalId: { type: DataTypes.INTEGER, allowNull: false, unique: true },
     date: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
   },
   { sequelize, tableName: "adoptions", timestamps: false }

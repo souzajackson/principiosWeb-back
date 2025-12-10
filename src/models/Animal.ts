@@ -3,8 +3,7 @@ import sequelize from "../config/database";
 import { Shelter } from "./Shelter";
 
 
-export class Animal extends Model
-{
+export class Animal extends Model {
   declare id: number;
   declare name: string;
   declare species: string;

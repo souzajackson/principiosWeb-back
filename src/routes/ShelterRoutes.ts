@@ -1,29 +1,29 @@
 import { Router } from "express";
-import { ShelterRepository } from "../repository/ShelterRepository";
+import { ShelterService } from "../services/ShelterService";
 
 const router = Router();
-const repo = new ShelterRepository();
+const service = new ShelterService();
 
 router.post("/", async (req, res) => {
-  const shelter = await repo.createShelter(req.body);
+  const shelter = await service.createShelter(req.body);
   res.status(201).json(shelter);
 });
 
 router.get("/", async (_, res) => {
-  res.json(await repo.getAllShelters());
+  res.json(await service.getAllShelters());
 });
 
 router.get("/:id", async (req, res) => {
-  res.json(await repo.getShelterById(Number(req.params.id)));
+  res.json(await service.getShelterById(Number(req.params.id)));
 });
 
 router.put("/:id", async (req, res) => {
-  await repo.updateShelter(Number(req.params.id), req.body);
+  await service.updateShelter(Number(req.params.id), req.body);
   res.json({ message: "Abrigo atualizado" });
 });
 
 router.delete("/:id", async (req, res) => {
-  await repo.deleteShelter(Number(req.params.id));
+  await service.deleteShelter(Number(req.params.id));
   res.json({ message: "Abrigo removido" });
 });
 
