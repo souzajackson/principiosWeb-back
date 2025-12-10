@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   db:
-    image: docker.io/postgres:16
+    image: postgres:16
     container_name: principios_db
     restart: always
     ports:
@@ -13,6 +13,18 @@ services:
       POSTGRES_DB: ${DB_NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  liquibase:
+    image: liquibase/liquibase:4.26
+    container_name: principios_liquibase
+    depends_on:
+      - db
+    volumes:
+      - ./migrations:/liquibase/changelog
+    command: >
+      --searchPath=/liquibase/changelog
+      --defaultsFile=/liquibase/changelog/liquibase.properties
+      update
 
   api:
     build: .

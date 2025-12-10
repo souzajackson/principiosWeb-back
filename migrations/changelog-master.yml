@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-criacao-tabelas
+      author: Erick Farias
+      changes:
+        - sqlFile:
+            path: 001-criacao-tabelas.sql
+            relativeToChangelogFile: true
