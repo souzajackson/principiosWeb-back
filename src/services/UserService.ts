@@ -34,21 +34,22 @@ export class UserService {
     return this.repo.createUser(data);
   }
 
-  private async verifyID(id: number) {
+  async verifyID(id: number) {
     const user = await this.repo.getUserById(id);
     if(!user) throw new NotFoundError("Não existe usuário com esse ID");
   }
 
-  private async verifyData(data: any) {
+  async verifyData(data: any) {
     if(!data.name || !data.email || !data.password) {
       throw new BadRequestError("Nome, Email e Senha são obrigatórios!")
     }
     await this.verifyEmail(data.email)
   }
   
-  private async verifyEmail(email: string, userId = -1) {
+  async verifyEmail(email: string, userId = -1) {
     const user = await this.repo.getUserByEmail(email)
-    if(user != null && user.id != userId) throw new BadRequestError("Email já está cadastrado")     
+    if(user != null && user.id != userId) {
+      throw new BadRequestError("Email já está cadastrado")     
+    }
   }
 }
-

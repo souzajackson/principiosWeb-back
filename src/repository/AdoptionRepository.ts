@@ -14,6 +14,10 @@ export class AdoptionRepository {
     return await Adoption.findByPk(id);
   }
 
+  async getAdoptionByAnimalId(animalId: number) {
+    return await Adoption.findOne({ where: { animalId } })
+  }
+
   async deleteAdoption(id: number) {
     return await Adoption.destroy({ where: { id } });
   }

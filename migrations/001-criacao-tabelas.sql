@@ -18,66 +18,66 @@ CREATE TABLE animals (
     name VARCHAR(255) NOT NULL,
     species VARCHAR(255) NOT NULL,
     age INTEGER NOT NULL,
-    shelter_id INTEGER NOT NULL,
+    "shelterId" INTEGER NOT NULL,
     CONSTRAINT fk_animals_shelter
-        FOREIGN KEY (shelter_id)
+        FOREIGN KEY ("shelterId")
         REFERENCES shelters(id)
         ON DELETE CASCADE
 );
 
 CREATE TABLE adoptions (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL,
-    animal_id INTEGER NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT uk_adoptions_animal UNIQUE (animal_id),
+    "userId" INTEGER NOT NULL,
+    "animalId" INTEGER NOT NULL,
+    "date" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT uk_adoptions_animal UNIQUE ("animalId"),
     CONSTRAINT fk_adoptions_user
-        FOREIGN KEY (user_id)
+        FOREIGN KEY ("userId")
         REFERENCES users(id)
         ON DELETE CASCADE,
     CONSTRAINT fk_adoptions_animal
-        FOREIGN KEY (animal_id)
+        FOREIGN KEY ("animalId")
         REFERENCES animals(id)
         ON DELETE CASCADE
 );
 
 CREATE TABLE donations (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL,
-    shelter_id INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "shelterId" INTEGER NOT NULL,
     amount NUMERIC(10,2) NOT NULL CHECK (amount > 0),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "date" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_donations_user
-        FOREIGN KEY (user_id)
+        FOREIGN KEY ("userId")
         REFERENCES users(id)
         ON DELETE CASCADE,
     CONSTRAINT fk_donations_shelter
-        FOREIGN KEY (shelter_id)
+        FOREIGN KEY ("shelterId")
         REFERENCES shelters(id)
         ON DELETE CASCADE
 );
 
 CREATE TABLE visits (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL,
-    shelter_id INTEGER NOT NULL,
-    visit_date TIMESTAMP NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "shelterId" INTEGER NOT NULL,
+    "date" TIMESTAMP NOT NULL,
     CONSTRAINT fk_visits_user
-        FOREIGN KEY (user_id)
+        FOREIGN KEY ("userId")
         REFERENCES users(id)
         ON DELETE CASCADE,
     CONSTRAINT fk_visits_shelter
-        FOREIGN KEY (shelter_id)
+        FOREIGN KEY ("shelterId")
         REFERENCES shelters(id)
         ON DELETE CASCADE
 );
 
 -- Recommended indexes for better query performance
-CREATE INDEX idx_animals_shelter_id ON animals(shelter_id);
-CREATE INDEX idx_adoptions_user_id ON adoptions(user_id);
-CREATE INDEX idx_adoptions_animal_id ON adoptions(animal_id);
-CREATE INDEX idx_donations_user_id ON donations(user_id);
-CREATE INDEX idx_donations_shelter_id ON donations(shelter_id);
-CREATE INDEX idx_visits_user_id ON visits(user_id);
-CREATE INDEX idx_visits_shelter_id ON visits(shelter_id);
-CREATE INDEX idx_visits_date ON visits(visit_date);
+CREATE INDEX idx_animals_shelter_id ON animals("shelterId");
+CREATE INDEX idx_adoptions_user_id ON adoptions("userId");
+CREATE INDEX idx_adoptions_animal_id ON adoptions("animalId");
+CREATE INDEX idx_donations_user_id ON donations("userId");
+CREATE INDEX idx_donations_shelter_id ON donations("shelterId");
+CREATE INDEX idx_visits_user_id ON visits("userId");
+CREATE INDEX idx_visits_shelter_id ON visits("shelterId");
+CREATE INDEX idx_visits_date ON visits("date");
