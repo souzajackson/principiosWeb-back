@@ -72,7 +72,6 @@ CREATE TABLE visits (
         ON DELETE CASCADE
 );
 
--- Recommended indexes for better query performance
 CREATE INDEX idx_animals_shelter_id ON animals("shelterId");
 CREATE INDEX idx_adoptions_user_id ON adoptions("userId");
 CREATE INDEX idx_adoptions_animal_id ON adoptions("animalId");

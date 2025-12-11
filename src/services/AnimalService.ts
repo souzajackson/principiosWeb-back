@@ -19,7 +19,6 @@ export class AnimalService {
     await this.verifyID(id);
     const shelterID = data.shelterId;
     if(shelterID != null) await this.shelterService.verifyID(shelterID);
-    console.log("Passou", shelterID)
     return this.repo.updateAnimal(id, data);
   }
 

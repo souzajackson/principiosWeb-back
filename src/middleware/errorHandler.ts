@@ -1,4 +1,3 @@
-// errorMiddleware.ts
 import { HttpError } from "./HttpErrors";
 
 export function errorHandler(err: any, req: any, res: any, next: any) {
