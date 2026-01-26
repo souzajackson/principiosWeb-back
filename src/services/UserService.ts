@@ -25,6 +25,12 @@ export class UserService {
     return this.repo.getUserById(id);
   }
 
+  async getUserByName(name: string) {
+    const user = await this.repo.getUserByName(name);
+    if(!user) throw new NotFoundError("Não existe usuário com esse nome");
+    return user;
+  }
+
   async getAllUsers() {
     return this.repo.getAllUsers();
   }

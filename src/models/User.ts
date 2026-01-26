@@ -1,12 +1,17 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../config/database";
 
-
 export class User extends Model {
   declare id: number;
   declare name: string;
   declare email: string;
   declare password: string;
+
+  static async getUserByName(name: string): Promise<User | null> {
+    return await User.findOne({
+      where: { name }
+    });
+  }
 }
 
 User.init(
