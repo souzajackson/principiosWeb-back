@@ -1,24 +1,18 @@
 import { Router } from "express";
-import { DonationService } from "../services/DonationService";
+import { authenticate } from "../middleware/authMiddleware";
+import {
+  createDonation,
+  getAllDonations,
+  getDonationById,
+  deleteDonation,
+} from "../controllers/donationController";
 
 const router = Router();
-const service = new DonationService();
 
-router.post("/", async (req, res) => {
-  res.status(201).json(await service.createDonation(req.body));
-});
-
-router.get("/", async (_, res) => {
-  res.json(await service.getAllDonations());
-});
-
-router.get("/:id", async (req, res) => {
-  res.json(await service.getDonationById(Number(req.params.id)));
-});
-
-router.delete("/:id", async (req, res) => {
-  await service.deleteDonation(Number(req.params.id));
-  res.json({ message: "Doação removida" });
-});
+// Todas as rotas protegidas
+router.post("/", authenticate, createDonation);
+router.get("/", authenticate, getAllDonations);
+router.get("/:id", authenticate, getDonationById);
+router.delete("/:id", authenticate, deleteDonation);
 
 export default router;
