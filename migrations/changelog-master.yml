@@ -6,3 +6,11 @@ databaseChangeLog:
         - sqlFile:
             path: 001-criacao-tabelas.sql
             relativeToChangelogFile: true
+
+  - changeSet:
+      id: 002-adaptacao-tabelas
+      author: Erick Farias
+      changes:
+        - sqlFile:
+            path: 002-adaptacao-tabelas.sql
+            relativeToChangelogFile: true

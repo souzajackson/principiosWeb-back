@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { authenticate } from "../middleware/authMiddleware";
+import { authorize } from "../middleware/authorize";
 import {
   createShelter,
   getAllShelters,
@@ -10,12 +11,12 @@ import {
 
 const router = Router();
 
-// GET pode ser público (para visitantes verem os abrigos)
 router.get("/", getAllShelters);
 router.get("/:id", getShelterById);
 
-// Rotas protegidas
-router.post("/", authenticate, createShelter);
+// apenas usuários do tipo SHELTER podem criar
+router.post("/", authenticate, authorize("SHELTER"), createShelter);
+
 router.put("/:id", authenticate, updateShelter);
 router.delete("/:id", authenticate, deleteShelter);
 

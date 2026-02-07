@@ -46,11 +46,17 @@ export class UserService {
   }
 
   async verifyData(data: any) {
-    if(!data.name || !data.email || !data.password) {
-      throw new BadRequestError("Nome, Email e Senha são obrigatórios!")
+    if(!data.name || !data.email || !data.password || !data.role) {
+      throw new BadRequestError("Nome, Email, Senha e Role são obrigatórios!")
     }
+
+    if(!['USER','SHELTER'].includes(data.role)) {
+      throw new BadRequestError("Role inválido")
+    }
+
     await this.verifyEmail(data.email)
   }
+
   
   async verifyEmail(email: string, userId = -1) {
     const user = await this.repo.getUserByEmail(email)

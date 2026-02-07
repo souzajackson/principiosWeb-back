@@ -33,7 +33,10 @@ export class AdoptionService {
 
   async createAdoption(data: any) {
     await this.verifyData(data);
-    return this.repo.createAdoption(data);
+    return this.repo.createAdoption({
+      ...data,
+      status: 'PENDING'
+    });
   }
 
   private async verifyData(data: any) {
@@ -53,4 +56,18 @@ export class AdoptionService {
     const adoption = await this.repo.getAdoptionById(id);
     if(!adoption) throw new NotFoundError("Não existe adoção com esse ID");
   }
+
+  async approveAdoption(id: number) {
+    await this.verifyID(id);
+    return this.repo.updateAdoption(id, { status: 'APPROVED' });
+  }
+
+  async rejectAdoption(id: number) {
+    await this.verifyID(id);
+    await this.repo.deleteAdoption(id);
+
+    return { message: "Adoption rejected and removed" };
+  }
+
+
 }

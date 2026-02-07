@@ -5,10 +5,20 @@ const service = new ShelterService();
 
 export const createShelter = async (req: Request, res: Response) => {
   try {
-    const shelter = await service.createShelter(req.body);
-    res.status(201).json(shelter);
+    const user = (req as any).user;
+
+    const { name, address, phone } = req.body;
+
+    const shelter = await service.createShelter({
+      name,
+      address,
+      phone,
+      userId: user.id // pega do token
+    });
+
+    return res.status(201).json(shelter);
   } catch (error) {
-    res.status(500).json({ message: "Error creating shelter", error });
+    return res.status(500).json({ message: "Error creating shelter" });
   }
 };
 

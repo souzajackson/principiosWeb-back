@@ -17,7 +17,11 @@ Animal.init(
     name: { type: DataTypes.STRING, allowNull: false },
     species: { type: DataTypes.STRING, allowNull: false },
     age: { type: DataTypes.INTEGER, allowNull: false },
-    shelterId: { type: DataTypes.INTEGER, allowNull: false }
+    shelterId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: 'shelter_id'
+    }
   },
   { sequelize, tableName: "animals", timestamps: false }
 );

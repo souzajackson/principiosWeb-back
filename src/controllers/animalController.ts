@@ -1,11 +1,30 @@
 import { Request, Response } from "express";
 import { AnimalService } from "../services/AnimalService";
+import { Shelter } from "../models/Shelter";
 
 const service = new AnimalService();
 
 export const createAnimal = async (req: Request, res: Response) => {
   try {
-    const animal = await service.createAnimal(req.body);
+    const user = (req as any).user;
+
+    const shelter = await Shelter.findOne({
+      where: { userId: user.id }
+    });
+
+    if (!shelter) {
+      return res.status(404).json({ message: "Shelter não encontrado para este usuário" });
+    }
+
+    const { name, species, age } = req.body;
+
+    const animal = await service.createAnimal({
+      name,
+      species,
+      age,
+      shelterId: shelter.id
+    });
+
     res.status(201).json(animal);
   } catch (error) {
     res.status(500).json({ message: "Error creating animal", error });

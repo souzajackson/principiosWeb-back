@@ -5,7 +5,13 @@ const service = new AdoptionService();
 
 export const createAdoption = async (req: Request, res: Response) => {
   try {
-    const adoption = await service.createAdoption(req.body);
+    const user = (req as any).user;
+
+    const adoption = await service.createAdoption({
+      userId: user.id, 
+      animalId: req.body.animalId 
+    });
+
     res.status(201).json(adoption);
   } catch (error) {
     res.status(500).json({ message: "Error creating adoption", error });
@@ -40,4 +46,14 @@ export const deleteAdoption = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({ message: "Error deleting adoption", error });
   }
+};
+
+export const approveAdoption = async (req: Request, res: Response) => {
+  const adoption = await service.approveAdoption(Number(req.params.id));
+  res.json(adoption);
+};
+
+export const rejectAdoption = async (req: Request, res: Response) => {
+  const adoption = await service.rejectAdoption(Number(req.params.id));
+  res.json(adoption);
 };

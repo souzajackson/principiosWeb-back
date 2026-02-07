@@ -15,7 +15,12 @@ export class AdoptionRepository {
   }
 
   async getAdoptionByAnimalId(animalId: number) {
-    return await Adoption.findOne({ where: { animalId } })
+    return await Adoption.findOne({ where: { animalId } });
+  }
+
+  async updateAdoption(id: number, data: any) {
+    await Adoption.update(data, { where: { id } });
+    return this.getAdoptionById(id);
   }
 
   async deleteAdoption(id: number) {
