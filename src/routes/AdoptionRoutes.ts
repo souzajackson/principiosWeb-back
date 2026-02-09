@@ -1,39 +1,28 @@
+// routes/adoptionRoutes.ts
 import { Router } from "express";
 import { authenticate } from "../middleware/authMiddleware";
 import { authorize } from "../middleware/authorize";
-
 import {
   createAdoption,
   getAllAdoptions,
   getAdoptionById,
   deleteAdoption,
   approveAdoption,
-  rejectAdoption
+  rejectAdoption,
 } from "../controllers/adoptionController";
 
 const router = Router();
 
-// USER cria pedido de adoção
-router.post("/", authenticate, authorize("USER"), createAdoption);
-
-// listar adoções (pode ser ambos)
 router.get("/", authenticate, getAllAdoptions);
 router.get("/:id", authenticate, getAdoptionById);
 
-// remover (opcional: apenas SHELTER)
+// Apenas USER pode criar solicitação de adoção
+router.post("/", authenticate, authorize("USER"), createAdoption);
+
+// Apenas SHELTER pode aprovar/rejeitar
+router.patch("/:id/approve", authenticate, authorize("SHELTER"), approveAdoption);
+router.patch("/:id/reject", authenticate, authorize("SHELTER"), rejectAdoption);
+
 router.delete("/:id", authenticate, deleteAdoption);
-
-// SHELTER aprova / rejeita
-router.put("/:id/approve",
-  authenticate,
-  authorize("SHELTER"),
-  approveAdoption
-);
-
-router.put("/:id/reject",
-  authenticate,
-  authorize("SHELTER"),
-  rejectAdoption
-);
 
 export default router;

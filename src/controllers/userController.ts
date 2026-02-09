@@ -7,7 +7,8 @@ export const createUser = async (req: Request, res: Response) => {
   try {
     const user = await service.createUser(req.body);
     res.status(201).json(user);
-  } catch (error) {
+  } catch (error: any) {
+    console.error("ERRO NO SEQUELIZE:", error.name, error.message); 
     res.status(500).json({ message: "Error creating user", error });
   }
 };

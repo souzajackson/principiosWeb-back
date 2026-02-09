@@ -20,7 +20,6 @@ Animal.init(
     shelterId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      field: 'shelter_id'
     }
   },
   { sequelize, tableName: "animals", timestamps: false }

@@ -1,23 +1,28 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { AnimalService } from "../services/AnimalService";
 import { Shelter } from "../models/Shelter";
+import { BadRequestError, NotFoundError } from "../middleware/HttpErrors";
 
 const service = new AnimalService();
 
-export const createAnimal = async (req: Request, res: Response) => {
+export const createAnimal = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const user = (req as any).user;
-
+    
     const shelter = await Shelter.findOne({
       where: { userId: user.id }
     });
 
     if (!shelter) {
-      return res.status(404).json({ message: "Shelter não encontrado para este usuário" });
+      throw new NotFoundError("Shelter não encontrado para este usuário");
     }
 
     const { name, species, age } = req.body;
-
+    
     const animal = await service.createAnimal({
       name,
       species,
@@ -25,9 +30,13 @@ export const createAnimal = async (req: Request, res: Response) => {
       shelterId: shelter.id
     });
 
-    res.status(201).json(animal);
+    return res.status(201).json(animal);
   } catch (error) {
-    res.status(500).json({ message: "Error creating animal", error });
+    if (error instanceof NotFoundError || error instanceof BadRequestError) {
+      return next(error);
+    }
+    console.error("Error creating animal:", error);
+    return res.status(500).json({ message: "Error creating animal" });
   }
 };
 

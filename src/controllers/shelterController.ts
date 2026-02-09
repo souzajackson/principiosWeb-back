@@ -1,62 +1,100 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { ShelterService } from "../services/ShelterService";
+import { BadRequestError, NotFoundError } from "../middleware/HttpErrors";
 
 const service = new ShelterService();
 
-export const createShelter = async (req: Request, res: Response) => {
+export const createShelter = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const user = (req as any).user;
-
     const { name, address, phone } = req.body;
 
     const shelter = await service.createShelter({
       name,
       address,
       phone,
-      userId: user.id // pega do token
+      userId: user.id,
     });
 
     return res.status(201).json(shelter);
   } catch (error) {
+    if (error instanceof BadRequestError || error instanceof NotFoundError) {
+      return next(error);
+    }
+    
+    console.error("Error creating shelter:", error);
     return res.status(500).json({ message: "Error creating shelter" });
   }
 };
 
-export const getAllShelters = async (req: Request, res: Response) => {
+export const getAllShelters = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const shelters = await service.getAllShelters();
-    res.json(shelters);
+    return res.json(shelters);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching shelters", error });
+    console.error("Error fetching shelters:", error);
+    return res.status(500).json({ message: "Error fetching shelters" });
   }
 };
 
-export const getShelterById = async (req: Request, res: Response) => {
+export const getShelterById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const shelter = await service.getShelterById(Number(req.params.id));
-    if (!shelter) {
-      return res.status(404).json({ message: "Shelter not found" });
-    }
-    res.json(shelter);
+    return res.json(shelter);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching shelter", error });
+    if (error instanceof NotFoundError) {
+      return next(error);
+    }
+    
+    console.error("Error fetching shelter:", error);
+    return res.status(500).json({ message: "Error fetching shelter" });
   }
 };
 
-export const updateShelter = async (req: Request, res: Response) => {
+export const updateShelter = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     await service.updateShelter(Number(req.params.id), req.body);
-    res.json({ message: "Abrigo atualizado" });
+    return res.json({ message: "Abrigo atualizado" });
   } catch (error) {
-    res.status(500).json({ message: "Error updating shelter", error });
+    if (error instanceof NotFoundError || error instanceof BadRequestError) {
+      return next(error);
+    }
+    
+    console.error("Error updating shelter:", error);
+    return res.status(500).json({ message: "Error updating shelter" });
   }
 };
 
-export const deleteShelter = async (req: Request, res: Response) => {
+export const deleteShelter = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     await service.deleteShelter(Number(req.params.id));
-    res.json({ message: "Abrigo removido" });
+    return res.json({ message: "Abrigo removido" });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting shelter", error });
+    if (error instanceof NotFoundError) {
+      return next(error);
+    }
+    
+    console.error("Error deleting shelter:", error);
+    return res.status(500).json({ message: "Error deleting shelter" });
   }
 };

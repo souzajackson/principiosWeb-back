@@ -41,14 +41,16 @@ export class AdoptionService {
 
   private async verifyData(data: any) {
     if(!data.userId || !data.animalId) {
-      throw new BadRequestError("É necessário informar o ID do usuário e animal")
+      throw new BadRequestError("É necessário informar o ID do usuário e animal");
     }
-
+    
     await this.animalService.verifyID(data.animalId);
     await this.userService.verifyID(data.userId);
-
-    if(await this.repo.getAdoptionByAnimalId(data.animalId) != null) {
-      throw new BadRequestError("O animal já foi adotado.")
+    
+    // Verificar se já existe adoção APROVADA ou PENDENTE
+    const existingAdoption = await this.repo.getAdoptionByAnimalId(data.animalId);
+    if(existingAdoption) {
+      throw new BadRequestError("O animal já foi adotado.");
     }
   }
 

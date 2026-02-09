@@ -12,9 +12,9 @@ export class Adoption extends Model {
 Adoption.init(
   {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-    userId: { type: DataTypes.INTEGER, allowNull: false, field: 'user_id' },
-    animalId: { type: DataTypes.INTEGER, allowNull: false, unique: true, field: 'animal_id' },
-    date: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, field: 'created_at' },
+    userId: { type: DataTypes.INTEGER, allowNull: false },
+    animalId: { type: DataTypes.INTEGER, allowNull: false, unique: true },
+    date: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     status: {
       type: DataTypes.ENUM('PENDING','APPROVED','REJECTED'),
       allowNull: false,
