@@ -69,7 +69,8 @@ export const updateShelter = async (
   next: NextFunction
 ) => {
   try {
-    await service.updateShelter(Number(req.params.id), req.body);
+    const userId = (req as any).user.id;
+    await service.updateShelter(Number(req.params.id), req.body, userId);
     return res.json({ message: "Abrigo atualizado" });
   } catch (error) {
     if (error instanceof NotFoundError || error instanceof BadRequestError) {
@@ -87,7 +88,8 @@ export const deleteShelter = async (
   next: NextFunction
 ) => {
   try {
-    await service.deleteShelter(Number(req.params.id));
+    const userId = (req as any).user.id;
+    await service.deleteShelter(Number(req.params.id), userId);
     return res.json({ message: "Abrigo removido" });
   } catch (error) {
     if (error instanceof NotFoundError) {

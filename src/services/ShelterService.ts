@@ -1,20 +1,24 @@
 import { BadRequestError, NotFoundError } from "../middleware/HttpErrors";
+import { User } from "../models/User";
 import { ShelterRepository } from "../repository/ShelterRepository";
+import { UserService } from "./UserService";
 
 export class ShelterService {
   private repo: ShelterRepository;
-
-  constructor(repo = new ShelterRepository()) {
+  private userService: UserService;
+  constructor(repo = new ShelterRepository(), userService = new UserService()) {
     this.repo = repo;
+    this.userService = userService;
   }
 
-  async deleteShelter(id: number) {
-    await this.verifyID(id);
+  async deleteShelter(id: number, userId: number) {
+    await this.verifyUpdate(id, userId);
     return this.repo.deleteShelter(id);
   }
 
-  async updateShelter(id: number, data: any) {
-    await this.verifyID(id);
+  async updateShelter(id: number, data: any, userId: number) {
+    delete data.userId;
+    await this.verifyUpdate(id, userId);
     return this.repo.updateShelter(id, data);
   }
 
@@ -64,5 +68,13 @@ export class ShelterService {
     if (existing) {
       throw new BadRequestError("Já existe um abrigo neste endereço");
     }
+  }
+
+  async verifyUpdate(id: number, userId: number) {
+    const shelter = await this.repo.getShelterById(id);
+    if (!shelter) {
+      throw new NotFoundError("Não existe Abrigo com esse ID");
+    }
+    await this.userService.canUpdateShelter(shelter.userId, userId);
   }
 }

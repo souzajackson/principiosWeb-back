@@ -1,4 +1,4 @@
-import { BadRequestError, NotFoundError } from "../middleware/HttpErrors";
+import { BadRequestError, Forbidden, NotFoundError } from "../middleware/HttpErrors";
 import { UserRepository } from "../repository/UserRepository";
 
 export class UserService {
@@ -10,14 +10,14 @@ export class UserService {
 
   async deleteUser(id: number, userId: number) {
     await this.verifyID(id);
-    if(id != userId) await this.checkSuper(userId);
+    await this.canUpdateUser(id, userId);
     return this.repo.deleteUser(id);
   }
 
   async updateUser(id: number, data: any, userId: number) {
     await this.verifyID(id);
     if(data.email != null) await this.verifyEmail(data.email, id)
-    if(userId != id) await this.checkSuper(userId);
+    await this.canUpdateUser(id, userId);
     return this.repo.updateUser(id, data)
   }
 
@@ -58,7 +58,6 @@ export class UserService {
     await this.verifyEmail(data.email)
   }
 
-  
   async verifyEmail(email: string, userId = -1) {
     const user = await this.repo.getUserByEmail(email)
     if(user != null && user.id != userId) {
@@ -70,5 +69,16 @@ export class UserService {
     const user = await this.repo.getUserById(userId);
     if(!user) return false;
     return user.role == 'SUPER';
+  }
+
+  async canUpdateUser(id: number, userId: number) {
+    const isSuper = await this.checkSuper(userId);
+    if(id != userId && !isSuper) throw new Forbidden("Sem permissão para atualizar esse usuário");
+  }
+
+  async canUpdateShelter(shelterUserId: number, userId: number) {
+    const user = await this.repo.getUserById(userId);
+    if(!user) throw new NotFoundError("Usuário não existe");
+    if(shelterUserId != userId && user.role != 'SUPER') throw new Forbidden("Usuário não tem permissão para atualizar esse abrigo");
   }
 }
