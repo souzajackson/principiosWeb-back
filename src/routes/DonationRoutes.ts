@@ -6,13 +6,19 @@ import {
   getDonationById,
   deleteDonation,
 } from "../controllers/donationController";
+import { authorize } from "../middleware/authorize";
 
 const router = Router();
 
-// Todas as rotas protegidas
-router.post("/", authenticate, createDonation);
-router.get("/", authenticate, getAllDonations);
+// Qualquer User
 router.get("/:id", authenticate, getDonationById);
-router.delete("/:id", authenticate, deleteDonation);
 
+// Apenas USER
+router.post("/", authenticate, authorize("USER"), createDonation);
+
+// Apenas SHELTER
+router.delete("/:id", authenticate, authorize("SHELTER"), deleteDonation);
+
+// SUPER USER
+router.get("/", authenticate, authorize(), getAllDonations);
 export default router;

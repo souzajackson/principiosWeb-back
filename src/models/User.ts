@@ -6,7 +6,7 @@ export class User extends Model {
   declare name: string;
   declare email: string;
   declare password: string;
-  declare role: 'USER' | 'SHELTER'; 
+  declare role: 'USER' | 'SHELTER' | 'SUPER'; 
 
   static async getUserByName(name: string): Promise<User | null> {
     return await User.findOne({
@@ -23,7 +23,7 @@ User.init(
     password: { type: DataTypes.STRING, allowNull: false },
 
     role: { 
-      type: DataTypes.ENUM('USER', 'SHELTER'),
+      type: DataTypes.ENUM('USER', 'SHELTER', 'SUPER'),
       allowNull: false,
       defaultValue: 'USER'
     }

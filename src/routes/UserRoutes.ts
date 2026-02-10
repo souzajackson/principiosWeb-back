@@ -7,6 +7,7 @@ import {
   updateUser,
   deleteUser,
 } from "../controllers/userController";
+import { authorize } from "../middleware/authorize";
 
 const router = Router();
 
@@ -14,9 +15,12 @@ const router = Router();
 router.post("/", createUser);
 
 // Rotas protegidas
-router.get("/", authenticate, getAllUsers);
 router.get("/:id", authenticate, getUserById);
 router.put("/:id", authenticate, updateUser);
 router.delete("/:id", authenticate, deleteUser);
+
+// SUPER USER
+router.get("/", authenticate, authorize(), getAllUsers);
+
 
 export default router;

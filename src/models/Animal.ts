@@ -24,6 +24,3 @@ Animal.init(
   },
   { sequelize, tableName: "animals", timestamps: false }
 );
-
-Shelter.hasMany(Animal, { foreignKey: "shelterId" });
-Animal.belongsTo(Shelter, { foreignKey: "shelterId" });

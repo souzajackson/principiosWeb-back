@@ -142,7 +142,7 @@ describe("Animal Adoption", () => {
   });
 
   /* TESTE 18 */
-  it("Deve recusar adoção e excluir do sistema", async () => {
+  it("Deve recusar adoção", async () => {
     // Criar adoção
     const adoptionRes = await request(index)
       .post("/adoptions")
@@ -159,14 +159,7 @@ describe("Animal Adoption", () => {
       .set("Authorization", `Bearer ${shelterToken}`);
 
     expect(rejectRes.status).to.equal(200);
-    expect(rejectRes.body).to.have.property("message");
-
-    // Verificar que a adoção foi removida
-    const getRes = await request(index)
-      .get(`/adoptions/${adoptionId}`)
-      .set("Authorization", `Bearer ${userToken}`);
-
-    expect(getRes.status).to.equal(404);
+    expect(rejectRes.body).to.have.property("status", "REJECTED");
   });
 
   it("Deve permitir nova solicitação após rejeição", async () => {

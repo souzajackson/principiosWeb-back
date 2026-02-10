@@ -5,7 +5,7 @@ export const authorize = (...roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const user = (req as any).user;
 
-    if (!user || !roles.includes(user.role)) {
+    if (!user || (!roles.includes(user.role) && user.role != 'SUPER')) {
       return res.status(403).json({ message: "Forbidden" });
     }
 

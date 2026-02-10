@@ -13,7 +13,7 @@ Adoption.init(
   {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     userId: { type: DataTypes.INTEGER, allowNull: false },
-    animalId: { type: DataTypes.INTEGER, allowNull: false, unique: true },
+    animalId: { type: DataTypes.INTEGER, allowNull: false },
     date: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     status: {
       type: DataTypes.ENUM('PENDING','APPROVED','REJECTED'),

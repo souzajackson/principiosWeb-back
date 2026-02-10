@@ -14,3 +14,11 @@ databaseChangeLog:
         - sqlFile:
             path: 002-adaptacao-tabelas.sql
             relativeToChangelogFile: true
+  
+  - changeSet:
+    id: 003-constraint-adoption
+    author: Jackson Souza
+    changes:
+      - sqlFile:
+          path: 003-constraint-adoption.sql
+          relativeToChangelogFile: true

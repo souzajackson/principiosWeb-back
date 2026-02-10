@@ -82,7 +82,9 @@ export const approveAdoption = async (
   next: NextFunction
 ) => {
   try {
-    const adoption = await service.approveAdoption(Number(req.params.id));
+    const userId = (req as any).user.id;
+    const adoptionId = Number(req.params.id);
+    const adoption = await service.approveAdoption(adoptionId, userId);
     return res.json(adoption);
   } catch (error) {
     if (error instanceof NotFoundError) {
@@ -99,8 +101,10 @@ export const rejectAdoption = async (
   next: NextFunction
 ) => {
   try {
-    const result = await service.rejectAdoption(Number(req.params.id));
-    return res.json(result);
+    const userId = (req as any).user.id;
+    const adoptionId = Number(req.params.id);
+    const adoption = await service.rejectAdoption(adoptionId, userId);
+    return res.json(adoption);
   } catch (error) {
     if (error instanceof NotFoundError) {
       return next(error);
