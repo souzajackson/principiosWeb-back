@@ -1,28 +1,27 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { UserService } from "../services/UserService";
 
 const service = new UserService();
 
-export const createUser = async (req: Request, res: Response) => {
+export const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = await service.createUser(req.body);
     res.status(201).json(user);
   } catch (error: any) {
-    console.error("ERRO NO SEQUELIZE:", error.name, error.message); 
-    res.status(500).json({ message: "Error creating user", error });
+    next(error); // Passa o erro para o middleware
   }
 };
 
-export const getAllUsers = async (req: Request, res: Response) => {
+export const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const users = await service.getAllUsers();
     res.json(users);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching users", error });
+    next(error);
   }
 };
 
-export const getUserById = async (req: Request, res: Response) => {
+export const getUserById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = await service.getUserById(Number(req.params.id));
     if (!user) {
@@ -30,26 +29,26 @@ export const getUserById = async (req: Request, res: Response) => {
     }
     res.json(user);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching user", error });
+    next(error);
   }
 };
 
-export const updateUser = async (req: Request, res: Response) => {
+export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = (req as any).user.id;
     await service.updateUser(Number(req.params.id), req.body, userId);
     res.json({ message: "Usuário atualizado" });
   } catch (error) {
-    res.status(500).json({ message: "Error updating user", error });
+    next(error);
   }
 };
 
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = (req as any).user.id;
     await service.deleteUser(Number(req.params.id), userId);
     res.json({ message: "Usuário removido" });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting user", error });
+    next(error);
   }
 };
