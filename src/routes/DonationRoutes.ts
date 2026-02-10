@@ -16,9 +16,8 @@ router.get("/:id", authenticate, getDonationById);
 // Apenas USER
 router.post("/", authenticate, authorize("USER"), createDonation);
 
-// Apenas SHELTER
-router.delete("/:id", authenticate, authorize("SHELTER"), deleteDonation);
 
 // SUPER USER
+router.delete("/:id", authenticate, authorize(), deleteDonation);
 router.get("/", authenticate, authorize(), getAllDonations);
 export default router;
