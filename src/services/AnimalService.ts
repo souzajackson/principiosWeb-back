@@ -1,3 +1,6 @@
+import { Request } from "express";
+import { ParamsDictionary } from "express-serve-static-core";
+import { ParsedQs } from "qs";
 import { BadRequestError, Forbidden, NotFoundError } from "../middleware/HttpErrors";
 import { AnimalRepository } from "../repository/AnimalRepository";
 import { ShelterService } from "./ShelterService";
@@ -30,6 +33,22 @@ export class AnimalService {
 
   async getAllAnimals() {
     return this.repo.getAllAnimals();
+  }
+
+  async searchAnimals(req: any) {
+    const result = await this.repo.searchAnimals({
+        page: req.query.page ? Number(req.query.page) : undefined,
+        pageSize: req.query.pageSize ? Number(req.query.pageSize) : undefined,
+        name: req.query.name as string | undefined,
+        species: req.query.species as string | undefined,
+        shelterId: req.query.shelterId ? Number(req.query.shelterId) : undefined,
+        ageMin: req.query.ageMin ? Number(req.query.ageMin) : undefined,
+        ageMax: req.query.ageMax ? Number(req.query.ageMax) : undefined,
+        sortBy: req.query.sortBy as any,
+        sortDir: req.query.sortDir as any,
+      });
+
+    return result;
   }
 
   async createAnimal(data: any) {

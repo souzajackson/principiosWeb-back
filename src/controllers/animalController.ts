@@ -61,6 +61,16 @@ export const getAnimalById = async (req: Request, res: Response) => {
   }
 };
 
+export const searchAnimals = async (req: Request, res: Response) => {
+  try {
+    const animals = await service.searchAnimals(req);
+    res.json(animals);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching animal", error });
+  }
+};
+
+
 export const updateAnimal = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.id;
