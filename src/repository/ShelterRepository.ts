@@ -1,7 +1,7 @@
 import { Shelter } from "../models/Shelter";
 
 export class ShelterRepository {
-
+  
   async createShelter(data: any) {
     return await Shelter.create(data);
   }
@@ -14,11 +14,27 @@ export class ShelterRepository {
     return await Shelter.findByPk(id);
   }
 
+  async getShelterByName(name: string) {
+    return await Shelter.findOne({ where: { name } });
+  }
+
+  async getShelterByAddress(address: string) {
+    return await Shelter.findOne({ where: { address } });
+  }
+
   async updateShelter(id: number, data: any) {
-    return await Shelter.update(data, { where: { id } });
+    const shelter = await Shelter.findByPk(id);
+    if (shelter) {
+      return await shelter.update(data);
+    }
+    return null;
   }
 
   async deleteShelter(id: number) {
-    return await Shelter.destroy({ where: { id } });
+    const shelter = await Shelter.findByPk(id);
+    if (shelter) {
+      return await shelter.destroy();
+    }
+    return null;
   }
 }

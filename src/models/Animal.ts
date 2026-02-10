@@ -17,10 +17,10 @@ Animal.init(
     name: { type: DataTypes.STRING, allowNull: false },
     species: { type: DataTypes.STRING, allowNull: false },
     age: { type: DataTypes.INTEGER, allowNull: false },
-    shelterId: { type: DataTypes.INTEGER, allowNull: false }
+    shelterId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    }
   },
   { sequelize, tableName: "animals", timestamps: false }
 );
-
-Shelter.hasMany(Animal, { foreignKey: "shelterId" });
-Animal.belongsTo(Shelter, { foreignKey: "shelterId" });

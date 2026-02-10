@@ -19,3 +19,9 @@ export class NotFoundError extends HttpError {
   }
 }
 
+export class Forbidden extends HttpError {
+  constructor(message: string) {
+    super(403, message);
+  }
+}
+

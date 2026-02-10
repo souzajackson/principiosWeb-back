@@ -30,7 +30,6 @@ CREATE TABLE adoptions (
     "userId" INTEGER NOT NULL,
     "animalId" INTEGER NOT NULL,
     "date" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT uk_adoptions_animal UNIQUE ("animalId"),
     CONSTRAINT fk_adoptions_user
         FOREIGN KEY ("userId")
         REFERENCES users(id)

@@ -1,24 +1,51 @@
 import { Adoption } from "../models/Adoption";
+import { Transaction } from "sequelize";
+import { Op } from "sequelize";
 
 export class AdoptionRepository {
 
   async createAdoption(data: any) {
-    return await Adoption.create(data);
+    return Adoption.create(data);
   }
 
   async getAllAdoptions() {
-    return await Adoption.findAll();
+    return Adoption.findAll();
   }
 
-  async getAdoptionById(id: number) {
-    return await Adoption.findByPk(id);
+  async getAdoptionById(id: number, t?: Transaction) {
+    return Adoption.findByPk(id, { transaction: t });
   }
 
   async getAdoptionByAnimalId(animalId: number) {
-    return await Adoption.findOne({ where: { animalId } })
+    return Adoption.findOne({ where: { animalId } });
+  }
+
+  async getApprovedAdoptionByAnimalId(animalId: number) {
+    return Adoption.findOne({
+      where: { animalId, status: "APPROVED" },
+    });
+  }
+
+  async updateAdoption(id: number, data: any, t?: Transaction) {
+    await Adoption.update(data, { where: { id }, transaction: t });
+    return this.getAdoptionById(id, t);
   }
 
   async deleteAdoption(id: number) {
-    return await Adoption.destroy({ where: { id } });
+    return Adoption.destroy({ where: { id }});
+  }
+
+  async rejectOtherPendingAdoptions(animalId: number, approvedId: number, t?: Transaction) {
+    return Adoption.update(
+      { status: "REJECTED" },
+      {
+        where: {
+          animalId,
+          id: { [Op.ne]: approvedId },
+          status: "PENDING",
+        },
+        transaction: t,
+      }
+    );
   }
 }

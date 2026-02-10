@@ -1,4 +1,4 @@
-import { BadRequestError, NotFoundError } from "../middleware/HttpErrors";
+import { BadRequestError, Forbidden, NotFoundError } from "../middleware/HttpErrors";
 import { UserRepository } from "../repository/UserRepository";
 
 export class UserService {
@@ -8,15 +8,16 @@ export class UserService {
     this.repo = repo;
   }
 
-  async deleteUser(id: number) {
+  async deleteUser(id: number, userId: number) {
     await this.verifyID(id);
+    await this.canUpdateUser(id, userId);
     return this.repo.deleteUser(id);
   }
 
-  async updateUser(id: number, data: any) {
+  async updateUser(id: number, data: any, userId: number) {
     await this.verifyID(id);
     if(data.email != null) await this.verifyEmail(data.email, id)
-
+    await this.canUpdateUser(id, userId);
     return this.repo.updateUser(id, data)
   }
 
@@ -46,16 +47,38 @@ export class UserService {
   }
 
   async verifyData(data: any) {
-    if(!data.name || !data.email || !data.password) {
-      throw new BadRequestError("Nome, Email e Senha são obrigatórios!")
+    if(!data.name || !data.email || !data.password || !data.role) {
+      throw new BadRequestError("Nome, Email, Senha e Role são obrigatórios!")
     }
+
+    if(!['USER','SHELTER'].includes(data.role)) {
+      throw new BadRequestError("Role inválido")
+    }
+
     await this.verifyEmail(data.email)
   }
-  
+
   async verifyEmail(email: string, userId = -1) {
     const user = await this.repo.getUserByEmail(email)
     if(user != null && user.id != userId) {
       throw new BadRequestError("Email já está cadastrado")     
     }
+  }
+
+  async checkSuper(userId: number) {
+    const user = await this.repo.getUserById(userId);
+    if(!user) return false;
+    return user.role == 'SUPER';
+  }
+
+  async canUpdateUser(id: number, userId: number) {
+    const isSuper = await this.checkSuper(userId);
+    if(id != userId && !isSuper) throw new Forbidden("Sem permissão para atualizar esse usuário");
+  }
+
+  async canUpdateShelter(shelterUserId: number, userId: number) {
+    const user = await this.repo.getUserById(userId);
+    if(!user) throw new NotFoundError("Usuário não existe");
+    if(shelterUserId != userId && user.role != 'SUPER') throw new Forbidden("Usuário não tem permissão para atualizar esse abrigo");
   }
 }

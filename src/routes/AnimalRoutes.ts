@@ -7,16 +7,18 @@ import {
   updateAnimal,
   deleteAnimal,
 } from "../controllers/animalController";
+import { authorize } from "../middleware/authorize";
 
 const router = Router();
 
-// GET all animals pode ser público (para visitantes verem)
-router.get("/", getAllAnimals);
+router.get("/", getAllAnimals); // Trocar pra SUPER USER se tiver paginacao
+
+// Qualquer User
 router.get("/:id", getAnimalById);
 
-// Rotas protegidas (apenas usuários autenticados)
-router.post("/", authenticate, createAnimal);
-router.put("/:id", authenticate, updateAnimal);
-router.delete("/:id", authenticate, deleteAnimal);
+//Apenas SHELTER
+router.post("/", authenticate, authorize("SHELTER"), createAnimal);
+router.put("/:id", authenticate, authorize("SHELTER"), updateAnimal);
+router.delete("/:id", authenticate, authorize("SHELTER"), deleteAnimal);
 
 export default router;

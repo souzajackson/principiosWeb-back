@@ -1,0 +1,16 @@
+ALTER TABLE users
+ADD COLUMN role VARCHAR(20) NOT NULL DEFAULT 'USER';
+
+ALTER TABLE shelters
+ADD COLUMN "userId" INTEGER;
+
+ALTER TABLE shelters
+ADD CONSTRAINT fk_shelters_user
+FOREIGN KEY ("userId")
+REFERENCES users(id)
+ON DELETE CASCADE;
+
+ALTER TABLE adoptions
+ADD COLUMN status VARCHAR(20) NOT NULL DEFAULT 'PENDING';
+
+CREATE INDEX idx_adoptions_status ON adoptions(status);

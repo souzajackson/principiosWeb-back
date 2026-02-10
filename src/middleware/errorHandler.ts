@@ -1,10 +1,26 @@
-import { HttpError } from "./HttpErrors";
+import { Request, Response, NextFunction } from "express";
+import { BadRequestError, Forbidden, NotFoundError } from "./HttpErrors";
 
-export function errorHandler(err: any, req: any, res: any, next: any) {
-  if (err instanceof HttpError) {
-    return res.status(err.status).json({ error: err.message });
+export const errorHandler = (
+  error: any,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  console.error("Error:", error.name, error.message);
+
+  if (error instanceof BadRequestError) {
+    return res.status(400).json({ message: error.message });
   }
 
-  console.error(err);
-  return res.status(500).json({ error: "Erro interno" });
-}
+  if (error instanceof Forbidden) {
+    return res.status(403).json({ message: error.message });
+  }
+
+  if (error instanceof NotFoundError) {
+    return res.status(404).json({ message: error.message });
+  }
+
+  // Erro genérico
+  res.status(500).json({ message: "Internal server error", error: error.message });
+};
