@@ -16,9 +16,17 @@ databaseChangeLog:
             relativeToChangelogFile: true
   
   - changeSet:
-    id: 003-constraint-adoption
-    author: Jackson Souza
-    changes:
-      - sqlFile:
-          path: 003-constraint-adoption.sql
-          relativeToChangelogFile: true
+      id: 003-constraint-adoption
+      author: Jackson Souza
+      changes:
+        - sqlFile:
+            path: 003-constraint-adoption.sql
+            relativeToChangelogFile: true
+    
+  - changeSet:
+      id: 004-super-user
+      author: Jackson Souza
+      changes:
+        - sqlFile:
+            path: 004-super-user.sql
+            relativeToChangelogFile: true
