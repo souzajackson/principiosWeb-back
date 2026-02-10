@@ -36,7 +36,8 @@ export const getUserById = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
   try {
-    await service.updateUser(Number(req.params.id), req.body);
+    const userId = (req as any).user.id;
+    await service.updateUser(Number(req.params.id), req.body, userId);
     res.json({ message: "Usuário atualizado" });
   } catch (error) {
     res.status(500).json({ message: "Error updating user", error });
@@ -45,7 +46,8 @@ export const updateUser = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
   try {
-    await service.deleteUser(Number(req.params.id));
+    const userId = (req as any).user.id;
+    await service.deleteUser(Number(req.params.id), userId);
     res.json({ message: "Usuário removido" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting user", error });

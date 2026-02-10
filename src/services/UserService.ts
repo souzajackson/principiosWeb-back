@@ -8,15 +8,16 @@ export class UserService {
     this.repo = repo;
   }
 
-  async deleteUser(id: number) {
+  async deleteUser(id: number, userId: number) {
     await this.verifyID(id);
+    if(id != userId) await this.checkSuper(userId);
     return this.repo.deleteUser(id);
   }
 
-  async updateUser(id: number, data: any) {
+  async updateUser(id: number, data: any, userId: number) {
     await this.verifyID(id);
     if(data.email != null) await this.verifyEmail(data.email, id)
-
+    if(userId != id) await this.checkSuper(userId);
     return this.repo.updateUser(id, data)
   }
 
@@ -63,5 +64,11 @@ export class UserService {
     if(user != null && user.id != userId) {
       throw new BadRequestError("Email já está cadastrado")     
     }
+  }
+
+  async checkSuper(userId: number) {
+    const user = await this.repo.getUserById(userId);
+    if(!user) return false;
+    return user.role == 'SUPER';
   }
 }
