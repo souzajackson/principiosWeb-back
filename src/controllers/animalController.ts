@@ -63,7 +63,8 @@ export const getAnimalById = async (req: Request, res: Response) => {
 
 export const updateAnimal = async (req: Request, res: Response) => {
   try {
-    await service.updateAnimal(Number(req.params.id), req.body);
+    const userId = (req as any).user.id;
+    await service.updateAnimal(Number(req.params.id), req.body, userId);
     res.json({ message: "Animal atualizado" });
   } catch (error) {
     res.status(500).json({ message: "Error updating animal", error });
@@ -72,7 +73,8 @@ export const updateAnimal = async (req: Request, res: Response) => {
 
 export const deleteAnimal = async (req: Request, res: Response) => {
   try {
-    await service.deleteAnimal(Number(req.params.id));
+    const userId = (req as any).user.id;
+    await service.deleteAnimal(Number(req.params.id), userId);
     res.json({ message: "Animal removido" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting animal", error });
