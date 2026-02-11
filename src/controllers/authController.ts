@@ -1,13 +1,14 @@
 import { Request, Response } from 'express';
 import { comparePassword, generateToken } from '../utils/auth';
 import { User } from '../models/User'; // Importa a classe User
+import { UserRepository } from '../repository/UserRepository';
 
 export const login = async (req: Request, res: Response) => {
-  const { name, password } = req.body;
-
+  const { email, password } = req.body;
+  const repo = new UserRepository();
   try {
     // Usa o método estático da classe User
-    const user = await User.getUserByName(name);
+    const user = await repo.getUserByEmail(email);
     
     if (!user) {
       return res.status(400).json({ message: 'Invalid username or password' });
@@ -21,7 +22,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     // Gera um token JWT
-    const token = generateToken(user.id, user.name, user.role);  // Note: user.name, não user.username
+    const token = generateToken(user.id, user.role);  // Note: user.name, não user.username
     
     res.status(200).json({ message: 'Login successful', token });
   } catch (err) {

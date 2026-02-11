@@ -8,10 +8,10 @@ describe("User Update and Delete", () => {
   let anotherUserId: number;
 
   // Função auxiliar para obter token
-  async function getToken(name: string, password: string): Promise<string> {
+  async function getToken(email: string, password: string): Promise<string> {
     const res = await request(index)
       .post("/auth/login")
-      .send({ name, password });
+      .send({ email: email, password: password });
     return res.body.token;
   }
 
@@ -53,7 +53,7 @@ describe("User Update and Delete", () => {
 
   /* TESTE 05 - Atualizar usuário */
   it("Deve atualizar dados do próprio usuário USER com token válido", async () => {
-    const token = await getToken("userToUpdate", "123456");
+    const token = await getToken("userupdate@test.com", "123456");
     
     const res = await request(index)
       .put(`/users/${userId}`)
@@ -68,7 +68,7 @@ describe("User Update and Delete", () => {
 
   /* TESTE 06 - Atualizar usuário SHELTER */
   it("Deve atualizar dados do próprio usuário SHELTER com token válido", async () => {
-    const token = await getToken("shelterToDelete", "123456");
+    const token = await getToken("shelterdelete@test.com", "123456");
     
     const res = await request(index)
       .put(`/users/${shelterId}`)
@@ -94,7 +94,7 @@ describe("User Update and Delete", () => {
 
   /* TESTE 08 - Atualizar usuário de outro (sem ser SUPER) */
   it("Não deve permitir atualizar dados de outro usuário (erro 403 - Forbidden)", async () => {
-    const token = await getToken("userUpdatedName", "123456"); // Nome atualizado do teste 05
+    const token = await getToken("userupdate@test.com", "123456"); // Nome atualizado do teste 05
     
     const res = await request(index)
       .put(`/users/${anotherUserId}`)
@@ -109,7 +109,7 @@ describe("User Update and Delete", () => {
 
   /* TESTE 09 - Atualizar com email já cadastrado */
   it("Não deve atualizar usuário com email já cadastrado (erro 400)", async () => {
-    const token = await getToken("userUpdatedName", "123456");
+    const token = await getToken("userupdate@test.com", "123456");
     
     const res = await request(index)
       .put(`/users/${userId}`)
@@ -124,7 +124,7 @@ describe("User Update and Delete", () => {
 
   /* TESTE 10 - Atualizar com email válido novo */
   it("Deve atualizar usuário com email novo e válido", async () => {
-    const token = await getToken("userUpdatedName", "123456");
+    const token = await getToken("userupdate@test.com", "123456");
     
     const res = await request(index)
       .put(`/users/${userId}`)
@@ -139,7 +139,7 @@ describe("User Update and Delete", () => {
 
   /* TESTE 11 - Atualizar com ID inexistente */
   it("Não deve atualizar usuário com ID inexistente (erro 404)", async () => {
-    const token = await getToken("userUpdatedName", "123456");
+    const token = await getToken("newemail@test.com", "123456");
     
     const res = await request(index)
       .put(`/users/99999`)
@@ -162,7 +162,7 @@ describe("User Update and Delete", () => {
 
   /* TESTE 13 - Deletar usuário de outro (sem ser SUPER) */
   it("Não deve permitir deletar outro usuário (erro 403 - Forbidden)", async () => {
-    const token = await getToken("userUpdatedName", "123456");
+    const token = await getToken("newemail@test.com", "123456");
     
     const res = await request(index)
       .delete(`/users/${anotherUserId}`)
@@ -174,7 +174,7 @@ describe("User Update and Delete", () => {
 
   /* TESTE 14 - Deletar usuário com ID inexistente */
   it("Não deve deletar usuário com ID inexistente (erro 404)", async () => {
-    const token = await getToken("userUpdatedName", "123456");
+    const token = await getToken("newemail@test.com", "123456");
     
     const res = await request(index)
       .delete(`/users/99999`)
@@ -186,7 +186,7 @@ describe("User Update and Delete", () => {
 
   /* TESTE 15 - Deletar o próprio usuário USER */
   it("Deve deletar o próprio usuário USER com token válido", async () => {
-    const token = await getToken("userUpdatedName", "123456");
+    const token = await getToken("newemail@test.com", "123456");
     
     const res = await request(index)
       .delete(`/users/${userId}`)
@@ -198,7 +198,7 @@ describe("User Update and Delete", () => {
 
   /* TESTE 16 - Deletar o próprio usuário SHELTER */
   it("Deve deletar o próprio usuário SHELTER com token válido", async () => {
-    const token = await getToken("shelterUpdatedName", "123456");
+    const token = await getToken("shelterdelete@test.com", "123456");
     
     const res = await request(index)
       .delete(`/users/${shelterId}`)
@@ -210,7 +210,7 @@ describe("User Update and Delete", () => {
 
   /* TESTE 17 - Deletar outro usuário */
   it("Deve deletar o outro usuário criado", async () => {
-    const token = await getToken("anotherUser", "123456");
+    const token = await getToken("another@test.com", "123456");
     
     const res = await request(index)
       .delete(`/users/${anotherUserId}`)

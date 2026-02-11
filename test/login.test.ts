@@ -21,7 +21,7 @@ describe("User Login", () => {
     const res = await request(index)
       .post("/auth/login")
       .send({
-        name: "loginTest",  // ou email, dependendo da sua implementação
+        email: "login@test.com",  // ou email, dependendo da sua implementação
         password: "123456"
       });
 
@@ -35,7 +35,7 @@ describe("User Login", () => {
     const res = await request(index)
       .post("/auth/login")
       .send({
-        name: "loginTest",
+        email: "login@test.com",
         password: "senhaErrada"
       });
 
@@ -47,7 +47,7 @@ describe("User Login", () => {
     const res = await request(index)
       .post("/auth/login")
       .send({
-        name: "usuarioInexistente",
+        email: "usuarioInexistente",
         password: "123456"
       });
 

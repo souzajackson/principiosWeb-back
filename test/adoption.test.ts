@@ -23,7 +23,7 @@ describe("Animal Adoption", () => {
     const userLogin = await request(index)
       .post("/auth/login")
       .send({
-        name: "adotante",
+        email: "adotante@test.com",
         password: "123456"
       });
     userToken = userLogin.body.token;
@@ -41,7 +41,7 @@ describe("Animal Adoption", () => {
     const shelterLogin = await request(index)
       .post("/auth/login")
       .send({
-        name: "abrigoAdocao",
+        email: "abrigo@adocao.com",
         password: "123456"
       });
     shelterToken = shelterLogin.body.token;

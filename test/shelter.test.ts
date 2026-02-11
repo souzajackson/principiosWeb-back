@@ -23,7 +23,7 @@ describe("Shelter Registration", () => {
     const userLogin = await request(index)
       .post("/auth/login")
       .send({
-        name: "userComum",
+        email: "user@comum.com",
         password: "123456"
       });
     userToken = userLogin.body.token;
@@ -42,7 +42,7 @@ describe("Shelter Registration", () => {
     const abrigoLogin = await request(index)
       .post("/auth/login")
       .send({
-        name: "abrigoUser",
+        email: "abrigo@test.com",
         password: "123456"
       });
     abrigoToken = abrigoLogin.body.token;

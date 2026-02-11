@@ -96,6 +96,9 @@ export class AdoptionService {
     if(!animal) throw new NotFoundError("Não existe animal na adoção");
     const shelter  = await this.shelterService.getShelterById(animal.shelterId);
     if(!shelter) throw new NotFoundError("Animal não tem abrigo associado");
-    if(userId != shelter.userId) throw new Forbidden("Abrigo não é o responsável por essa adoção");
+    const user = await this.userService.getUserById(userId);
+    if(!user) throw new NotFoundError("Não existe usuário com esse ID");
+
+    if(userId != shelter.userId && user.role != 'SUPER') throw new Forbidden("Abrigo não é o responsável por essa adoção");
   }
 }

@@ -23,7 +23,7 @@ describe("Animal Registration", () => {
     const userLogin = await request(index)
       .post("/auth/login")
       .send({
-        name: "userAnimal",
+        email: "userAnimal@comum.com",
         password: "123456"
       });
     userToken = userLogin.body.token;
@@ -41,7 +41,7 @@ describe("Animal Registration", () => {
     const shelterLogin = await request(index)
       .post("/auth/login")
       .send({
-        name: "shelterWithShelter",
+        email: "shelter1@test.com",
         password: "123456"
       });
     shelterToken = shelterLogin.body.token;
@@ -70,7 +70,7 @@ describe("Animal Registration", () => {
     const shelterLogin2 = await request(index)
       .post("/auth/login")
       .send({
-        name: "shelterWithoutShelter",
+        email: "shelter2@test.com",
         password: "123456"
       });
     shelterWithoutShelterToken = shelterLogin2.body.token;
