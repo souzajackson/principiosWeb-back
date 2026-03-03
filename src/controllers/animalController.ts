@@ -24,10 +24,10 @@ const mapAnimalToResponse = (animal: any) => {
     healthStatus: animal.healthStatus ?? "",
     vaccinated: animal.vaccinated ?? false,
     neutered: animal.neutered ?? false,
-    shelterName: animal.Shelter?.name ?? "",
-    shelterPhone: animal.Shelter?.phone ?? "",
-    shelterEmail: "", // ainda não existe no model
-    location: animal.Shelter?.address ?? "",
+    shelterName: animal.shelter?.name ?? "",
+    shelterPhone: animal.shelter?.phone ?? "",
+    shelterEmail: animal.shelter?.email ?? "", // ainda não existe no model
+    location: animal.shelter?.address ?? "",
   };
 };
 
