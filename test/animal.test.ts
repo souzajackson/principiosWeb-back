@@ -83,8 +83,12 @@ describe("Animal Registration", () => {
       .set("Authorization", `Bearer ${shelterToken}`)
       .send({
         name: "Rex",
-        species: "Cachorro",
-        age: 3
+        species: "DOG",
+        age: 3,
+        description: "Cachorro manso",
+        sex: "MALE",
+        breed: "poodle",
+        photoUrl: "",
       });
 
     expect(res.status).to.equal(201);
@@ -99,9 +103,13 @@ describe("Animal Registration", () => {
       .post("/animals")
       .set("Authorization", `Bearer ${shelterWithoutShelterToken}`)
       .send({
-        name: "Miau",
-        species: "Gato",
-        age: 2
+        name: "Rex",
+        species: "DOG",
+        age: 3,
+        description: "Cachorro manso",
+        sex: "MALE",
+        breed: "poodle",
+        photoUrl: "",
       });
 
     expect(res.status).to.equal(404);
@@ -113,9 +121,13 @@ describe("Animal Registration", () => {
       .post("/animals")
       .set("Authorization", `Bearer ${userToken}`)
       .send({
-        name: "Bolt",
-        species: "Cachorro",
-        age: 1
+        name: "Rex",
+        species: "DOG",
+        age: 3,
+        description: "Cachorro manso",
+        sex: "MALE",
+        breed: "poodle",
+        photoUrl: "",
       });
 
     expect(res.status).to.equal(403);

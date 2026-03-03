@@ -61,9 +61,13 @@ describe("Animal Adoption", () => {
       .post("/animals")
       .set("Authorization", `Bearer ${shelterToken}`)
       .send({
-        name: "Totó",
-        species: "Cachorro",
-        age: 2
+        name: "Rex",
+        species: "DOG",
+        age: 3,
+        description: "Cachorro manso",
+        sex: "MALE",
+        breed: "poodle",
+        photoUrl: "",
       });
     animalId = animalRes.body.id;
   });

@@ -21,12 +21,16 @@ export const createAnimal = async (
       throw new NotFoundError("Shelter não encontrado para este usuário");
     }
 
-    const { name, species, age } = req.body;
+    const { name, species, age, sex, breed, photoUrl, description } = req.body;
     
     const animal = await service.createAnimal({
       name,
       species,
       age,
+      sex,
+      breed,
+      photoUrl,
+      description,
       shelterId: shelter.id
     });
 
