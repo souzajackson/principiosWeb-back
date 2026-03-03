@@ -1,5 +1,6 @@
 import { Model, DataTypes, Optional } from "sequelize";
 import sequelize from "../config/database";
+import { Animal } from "./Animal";
 
 
 export class Shelter extends Model {

@@ -30,3 +30,11 @@ databaseChangeLog:
         - sqlFile:
             path: 004-super-user.sql
             relativeToChangelogFile: true
+
+  - changeSet:
+      id: 005-alter-table-animals
+      author: Erick Farias
+      changes:
+        - sqlFile:
+            path: 005-alter-table-animals.sql
+            relativeToChangelogFile: true

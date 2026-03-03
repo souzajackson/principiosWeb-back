@@ -1,0 +1,8 @@
+ALTER TABLE animals
+ADD COLUMN gender VARCHAR(50),
+ADD COLUMN size VARCHAR(50),
+ADD COLUMN personality TEXT,
+ADD COLUMN "healthStatus" VARCHAR(100),
+ADD COLUMN vaccinated BOOLEAN DEFAULT false,
+ADD COLUMN neutered BOOLEAN DEFAULT false,
+DROP COLUMN sex;

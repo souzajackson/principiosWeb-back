@@ -1,14 +1,21 @@
-import { Model, DataTypes, Optional } from "sequelize";
+import { Model, DataTypes } from "sequelize";
 import sequelize from "../config/database";
+import { Shelter } from "./Shelter";
 
 export enum AnimalSpecies {
-  DOG = "DOG",
-  CAT = "CAT",
+  DOG = "dog",
+  CAT = "cat",
 }
 
-export enum AnimalSex {
-  MALE = "MALE",
-  FEMALE = "FEMALE",
+export enum AnimalGender {
+  MALE = "Macho",
+  FEMALE = "Fêmea",
+}
+
+export enum AnimalSize {
+  SMALL = "Pequeno",
+  MEDIUM = "Médio",
+  LARGE = "Grande",
 }
 
 export class Animal extends Model {
@@ -17,23 +24,30 @@ export class Animal extends Model {
   declare species: AnimalSpecies;
   declare breed: string;
   declare age: number;
-  declare sex: AnimalSex;
+  declare gender: AnimalGender;
+  declare size: AnimalSize;
   declare photoUrl: string;
   declare description: string;
+
+  declare personality: string[];   // ARRAY
+  declare healthStatus: string;
+  declare vaccinated: boolean;
+  declare neutered: boolean;
+
   declare shelterId: number;
 }
 
 Animal.init(
   {
-    id: { 
-      type: DataTypes.INTEGER, 
-      autoIncrement: true, 
-      primaryKey: true 
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
     },
 
-    name: { 
-      type: DataTypes.STRING, 
-      allowNull: false 
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
 
     species: {
@@ -46,13 +60,18 @@ Animal.init(
       allowNull: false,
     },
 
-    age: { 
-      type: DataTypes.INTEGER, 
-      allowNull: false 
+    age: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
 
-    sex: {
-      type: DataTypes.ENUM(...Object.values(AnimalSex)),
+    gender: {
+      type: DataTypes.ENUM(...Object.values(AnimalGender)),
+      allowNull: false,
+    },
+
+    size: {
+      type: DataTypes.ENUM(...Object.values(AnimalSize)),
       allowNull: false,
     },
 
@@ -66,14 +85,43 @@ Animal.init(
       allowNull: false,
     },
 
+    personality: {
+      type: DataTypes.JSON, // suporta array de strings
+      allowNull: false,
+      defaultValue: [],
+    },
+
+    healthStatus: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: "Saudável",
+    },
+
+    vaccinated: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+
+    neutered: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+
     shelterId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-    }
+    },
   },
-  { 
-    sequelize, 
-    tableName: "animals", 
-    timestamps: false 
+  {
+    sequelize,
+    tableName: "animals",
+    timestamps: false,
   }
 );
+
+Animal.belongsTo(Shelter, {
+  foreignKey: 'shelterId',
+  as: 'shelter'
+});

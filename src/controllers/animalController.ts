@@ -1,9 +1,35 @@
 import { Request, Response, NextFunction } from "express";
 import { AnimalService } from "../services/AnimalService";
 import { Shelter } from "../models/Shelter";
+import { Animal } from "../models/Animal";
 import { BadRequestError, NotFoundError } from "../middleware/HttpErrors";
 
 const service = new AnimalService();
+
+/**
+ * 🔥 Função interna para transformar Animal -> formato do Front
+ */
+const mapAnimalToResponse = (animal: any) => {
+  return {
+    id: animal.id,
+    name: animal.name,
+    type: animal.species, // já está dog | cat
+    breed: animal.breed,
+    age: animal.age,
+    gender: animal.gender,
+    size: animal.size,
+    imageUrl: animal.photoUrl,
+    description: animal.description,
+    personality: animal.personality ?? [],
+    healthStatus: animal.healthStatus ?? "",
+    vaccinated: animal.vaccinated ?? false,
+    neutered: animal.neutered ?? false,
+    shelterName: animal.Shelter?.name ?? "",
+    shelterPhone: animal.Shelter?.phone ?? "",
+    shelterEmail: "", // ainda não existe no model
+    location: animal.Shelter?.address ?? "",
+  };
+};
 
 export const createAnimal = async (
   req: Request,
@@ -12,29 +38,51 @@ export const createAnimal = async (
 ) => {
   try {
     const user = (req as any).user;
-    
+
     const shelter = await Shelter.findOne({
-      where: { userId: user.id }
+      where: { userId: user.id },
     });
 
     if (!shelter) {
       throw new NotFoundError("Shelter não encontrado para este usuário");
     }
 
-    const { name, species, age, sex, breed, photoUrl, description } = req.body;
-    
-    const animal = await service.createAnimal({
+    const {
       name,
       species,
       age,
-      sex,
+      gender,
       breed,
-      photoUrl,
+      image,            // ← vem do front
       description,
-      shelterId: shelter.id
+      size,
+      personality,
+      healthStatus,
+      vaccinated,
+      neutered,
+    } = req.body;
+
+    const animal = await service.createAnimal({
+      name,
+      species,
+      age: Number(age),
+      gender,
+      breed,
+      photoUrl: image,  // ← mapeamento correto
+      description: description || "",
+      size: size || "Médio",
+      personality: personality ? [personality] : [],
+      healthStatus: healthStatus || "Saudável",
+      vaccinated: vaccinated ?? false,
+      neutered: neutered ?? false,
+      shelterId: shelter.id,
     });
 
-    return res.status(201).json(animal);
+    const createdAnimal = await Animal.findByPk(animal.id, {
+      include: [{ model: Shelter, as: 'shelter' }],
+    });
+
+    return res.status(201).json(mapAnimalToResponse(createdAnimal));
   } catch (error) {
     if (error instanceof NotFoundError || error instanceof BadRequestError) {
       return next(error);
@@ -46,8 +94,11 @@ export const createAnimal = async (
 
 export const getAllAnimals = async (req: Request, res: Response) => {
   try {
-    const animals = await service.getAllAnimals();
-    res.json(animals);
+    const animals = await Animal.findAll({
+      include: [{ model: Shelter, as: 'shelter' }],
+    });
+
+    res.json(animals.map(mapAnimalToResponse));
   } catch (error) {
     res.status(500).json({ message: "Error fetching animals", error });
   }
@@ -55,31 +106,31 @@ export const getAllAnimals = async (req: Request, res: Response) => {
 
 export const getAnimalById = async (req: Request, res: Response) => {
   try {
-    const animal = await service.getAnimalById(Number(req.params.id));
+    const animal = await Animal.findByPk(Number(req.params.id), {
+      include: [{ model: Shelter, as: 'shelter' }],
+    });
+
     if (!animal) {
       return res.status(404).json({ message: "Animal not found" });
     }
-    res.json(animal);
+
+    res.json(mapAnimalToResponse(animal));
   } catch (error) {
     res.status(500).json({ message: "Error fetching animal", error });
   }
 };
-
-export const searchAnimals = async (req: Request, res: Response) => {
-  try {
-    const animals = await service.searchAnimals(req);
-    res.json(animals);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching animal", error });
-  }
-};
-
 
 export const updateAnimal = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.id;
+
     await service.updateAnimal(Number(req.params.id), req.body, userId);
-    res.json({ message: "Animal atualizado" });
+
+    const updatedAnimal = await Animal.findByPk(Number(req.params.id), {
+      include: [{ model: Shelter, as: 'shelter' }],
+    });
+
+    res.json(mapAnimalToResponse(updatedAnimal));
   } catch (error) {
     res.status(500).json({ message: "Error updating animal", error });
   }
@@ -92,5 +143,33 @@ export const deleteAnimal = async (req: Request, res: Response) => {
     res.json({ message: "Animal removido" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting animal", error });
+  }
+};
+
+export const searchAnimals = async (req: Request, res: Response) => {
+  try {
+    const { species, gender, size, name } = req.query;
+
+    const where: any = {};
+
+    if (species) where.species = species;
+    if (gender) where.gender = gender;
+    if (size) where.size = size;
+
+    if (name) {
+      where.name = {
+        [require("sequelize").Op.iLike]: `%${name}%`,
+      };
+    }
+
+    const animals = await Animal.findAll({
+      where,
+      include: [{ model: Shelter, as: 'shelter' }],
+    });
+
+    res.json(animals.map(mapAnimalToResponse));
+  } catch (error) {
+    console.error("Error searching animals:", error);
+    res.status(500).json({ message: "Error searching animals", error });
   }
 };

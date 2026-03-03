@@ -1,6 +1,6 @@
 // repository/AnimalRepository.ts
 import { Op, WhereOptions } from "sequelize";
-import { Animal, AnimalSex, AnimalSpecies } from "../models/Animal";
+import { Animal, AnimalGender, AnimalSpecies } from "../models/Animal";
 
 export type AnimalQuery = {
   page?: number;
@@ -10,7 +10,7 @@ export type AnimalQuery = {
   breed?: string;
 
   species?: AnimalSpecies; // ENUM
-  sex?: AnimalSex;         // ENUM
+  sex?: AnimalGender;         // ENUM
 
   shelterId?: number;
 

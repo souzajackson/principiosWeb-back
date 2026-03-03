@@ -1,7 +1,7 @@
 import { BadRequestError, Forbidden, NotFoundError } from "../middleware/HttpErrors";
 import { AnimalQuery, AnimalRepository } from "../repository/AnimalRepository";
 import { ShelterService } from "./ShelterService";
-import { AnimalSex, AnimalSpecies } from "../models/Animal";
+import { AnimalGender, AnimalSpecies } from "../models/Animal";
 import { parseEnum } from "../utils/parseEnum";
 
 export class AnimalService {
@@ -44,7 +44,7 @@ export class AnimalService {
 
       // ENUMS
       species: parseEnum(AnimalSpecies, req.query.species),
-      sex: parseEnum(AnimalSex, req.query.sex),
+      sex: parseEnum(AnimalGender, req.query.sex),
 
       shelterId: req.query.shelterId ? Number(req.query.shelterId) : undefined,
       ageMin: req.query.ageMin ? Number(req.query.ageMin) : undefined,

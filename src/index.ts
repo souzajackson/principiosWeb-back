@@ -17,6 +17,7 @@ const app = express();
 
 // Log para ver se o Express está funcionando
 app.use((req, res, next) => {
+  cors();
   console.log(`🌐 Requisição recebida: ${req.method} ${req.url}`);
   next();
 });
@@ -29,7 +30,7 @@ const corsOptions: CorsOptions = {
 };
 
 // ✅ CORS antes das rotas
-app.use(cors(corsOptions));
+app.use(cors());
 
 // ✅ Preflight para qualquer rota (Express 5 friendly)
 app.options(/.*/, cors(corsOptions));
