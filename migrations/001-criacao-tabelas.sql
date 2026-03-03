@@ -17,7 +17,11 @@ CREATE TABLE animals (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     species VARCHAR(255) NOT NULL,
+    breed VARCHAR(255) NOT NULL,
     age INTEGER NOT NULL,
+    sex VARCHAR(255) NOT NULL,
+    "photoUrl" VARCHAR(255) NOT NULL,
+    description VARCHAR(255) NOT NULL,
     "shelterId" INTEGER NOT NULL,
     CONSTRAINT fk_animals_shelter
         FOREIGN KEY ("shelterId")
@@ -72,6 +76,10 @@ CREATE TABLE visits (
 );
 
 CREATE INDEX idx_animals_shelter_id ON animals("shelterId");
+CREATE INDEX idx_animals_sex ON animals("sex");
+CREATE INDEX idx_animals_species ON animals("species");
+CREATE INDEX idx_animals_breed ON animals("breed");
+CREATE INDEX idx_animals_age ON animals("age");
 CREATE INDEX idx_adoptions_user_id ON adoptions("userId");
 CREATE INDEX idx_adoptions_animal_id ON adoptions("animalId");
 CREATE INDEX idx_donations_user_id ON donations("userId");

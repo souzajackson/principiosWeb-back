@@ -1,9 +1,8 @@
-import { Request } from "express";
-import { ParamsDictionary } from "express-serve-static-core";
-import { ParsedQs } from "qs";
 import { BadRequestError, Forbidden, NotFoundError } from "../middleware/HttpErrors";
-import { AnimalRepository } from "../repository/AnimalRepository";
+import { AnimalQuery, AnimalRepository } from "../repository/AnimalRepository";
 import { ShelterService } from "./ShelterService";
+import { AnimalSex, AnimalSpecies } from "../models/Animal";
+import { parseEnum } from "../utils/parseEnum";
 
 export class AnimalService {
   private repo: AnimalRepository;
@@ -36,19 +35,26 @@ export class AnimalService {
   }
 
   async searchAnimals(req: any) {
-    const result = await this.repo.searchAnimals({
-        page: req.query.page ? Number(req.query.page) : undefined,
-        pageSize: req.query.pageSize ? Number(req.query.pageSize) : undefined,
-        name: req.query.name as string | undefined,
-        species: req.query.species as string | undefined,
-        shelterId: req.query.shelterId ? Number(req.query.shelterId) : undefined,
-        ageMin: req.query.ageMin ? Number(req.query.ageMin) : undefined,
-        ageMax: req.query.ageMax ? Number(req.query.ageMax) : undefined,
-        sortBy: req.query.sortBy as any,
-        sortDir: req.query.sortDir as any,
-      });
+    const query: AnimalQuery = {
+      page: req.query.page ? Number(req.query.page) : undefined,
+      pageSize: req.query.pageSize ? Number(req.query.pageSize) : undefined,
 
-    return result;
+      name: typeof req.query.name === "string" ? req.query.name : undefined,
+      breed: typeof req.query.breed === "string" ? req.query.breed : undefined,
+
+      // ENUMS
+      species: parseEnum(AnimalSpecies, req.query.species),
+      sex: parseEnum(AnimalSex, req.query.sex),
+
+      shelterId: req.query.shelterId ? Number(req.query.shelterId) : undefined,
+      ageMin: req.query.ageMin ? Number(req.query.ageMin) : undefined,
+      ageMax: req.query.ageMax ? Number(req.query.ageMax) : undefined,
+
+      sortBy: req.query.sortBy as any,
+      sortDir: req.query.sortDir as any,
+    };
+
+    return await this.repo.searchAnimals(query);
   }
 
   async createAnimal(data: any) {

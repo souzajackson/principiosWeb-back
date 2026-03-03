@@ -1,18 +1,29 @@
 // repository/AnimalRepository.ts
 import { Op, WhereOptions } from "sequelize";
-import { Animal } from "../models/Animal";
+import { Animal, AnimalSex, AnimalSpecies } from "../models/Animal";
 
 export type AnimalQuery = {
-  page?: number;       
-  pageSize?: number;   
-  name?: string;        
-  species?: string;   
+  page?: number;
+  pageSize?: number;
+
+  name?: string;
+  breed?: string;
+
+  species?: AnimalSpecies; // ENUM
+  sex?: AnimalSex;         // ENUM
+
   shelterId?: number;
+
   ageMin?: number;
   ageMax?: number;
-  sortBy?: "id" | "name" | "species" | "age" | "shelterId";
+
+  sortBy?:
+    | "name"
+    | "age"
+
   sortDir?: "ASC" | "DESC";
 };
+
 
 export class AnimalRepository {
   async searchAnimals(query: AnimalQuery) {
@@ -27,13 +38,20 @@ export class AnimalRepository {
     }
 
     if (query.name && query.name.trim() !== "") {
-      // Postgres: ILIKE (case-insensitive)
       where.name = { [Op.iLike]: `%${query.name.trim()}%` };
-      // Se não for Postgres, use Op.like
     }
 
-    if (query.species && query.species.trim() !== "") {
-      where.species = { [Op.iLike]: `%${query.species.trim()}%` };
+    if (query.breed && query.breed.trim() !== "") {
+      where.breed = { [Op.iLike]: `%${query.breed.trim()}%` };
+    }
+
+    // ENUM -> igualdade (não ILIKE)
+    if (query.species != null) {
+      where.species = query.species;
+    }
+
+    if (query.sex != null) {
+      where.sex = query.sex;
     }
 
     if (query.ageMin != null || query.ageMax != null) {
@@ -42,7 +60,7 @@ export class AnimalRepository {
       if (query.ageMax != null) (where.age as any)[Op.lte] = Number(query.ageMax);
     }
 
-    const sortBy = query.sortBy ?? "id";
+    const sortBy = query.sortBy ?? "name";
     const sortDir = query.sortDir ?? "ASC";
 
     const { rows, count } = await Animal.findAndCountAll({
