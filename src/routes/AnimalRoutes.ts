@@ -6,14 +6,16 @@ import {
   getAnimalById,
   updateAnimal,
   deleteAnimal,
+  searchAnimals
 } from "../controllers/animalController";
 import { authorize } from "../middleware/authorize";
 
 const router = Router();
 
-router.get("/", getAllAnimals); // Trocar pra SUPER USER se tiver paginacao
+router.get("/", getAllAnimals, authorize()); // Trocar pra SUPER USER se tiver paginacao
 
 // Qualquer User
+router.get("/search", searchAnimals);
 router.get("/:id", getAnimalById);
 
 //Apenas SHELTER

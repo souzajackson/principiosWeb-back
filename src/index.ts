@@ -9,6 +9,8 @@ import visitRoutes from "./routes/VisitRoutes";
 import authRoutes from './routes/AuthRoutes';
 import sequelize from "./config/database";
 import { errorHandler } from "./middleware/errorHandler";
+import cors, { type CorsOptions } from 'cors';
+
 
 // Inicializa o Express
 const app = express();
@@ -18,6 +20,19 @@ app.use((req, res, next) => {
   console.log(`🌐 Requisição recebida: ${req.method} ${req.url}`);
   next();
 });
+
+const corsOptions: CorsOptions = {
+  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: false, // true só se você usa cookies/sessão
+};
+
+// ✅ CORS antes das rotas
+app.use(cors(corsOptions));
+
+// ✅ Preflight para qualquer rota (Express 5 friendly)
+app.options(/.*/, cors(corsOptions));
 
 // Middlewares importantes
 app.use(express.json());
