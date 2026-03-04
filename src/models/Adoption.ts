@@ -1,5 +1,6 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../config/database";
+import { Animal } from "./Animal";
 
 export class Adoption extends Model {
   declare id: number;
@@ -23,3 +24,8 @@ Adoption.init(
   },
   { sequelize, tableName: "adoptions", timestamps: false }
 );
+
+Adoption.belongsTo(Animal, {
+  foreignKey: 'animalId',
+  as: 'animal',
+});

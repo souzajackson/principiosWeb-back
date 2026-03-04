@@ -9,23 +9,36 @@ import {
   deleteAdoption,
   approveAdoption,
   rejectAdoption,
+  getMyAdoptions,
+  getMyShelterAdoptions,
 } from "../controllers/adoptionController";
 
 const router = Router();
 
-//qualquer USER
+// ✅ ROTAS ESPECÍFICAS PRIMEIRO
+
+router.get("/my", authenticate, getMyAdoptions);
+
+router.get(
+  "/shelter",
+  authenticate,
+  authorize("SHELTER", "SUPER"),
+  getMyShelterAdoptions
+);
+
+// ✅ Depois rota dinâmica NUMÉRICA
 router.get("/:id", authenticate, getAdoptionById);
 
-// Apenas USER pode criar solicitação de adoção
+// ✅ Outras rotas
+
 router.post("/", authenticate, authorize("USER"), createAdoption);
 
-// Apenas SHELTER pode aprovar/rejeitar
 router.patch("/:id/approve", authenticate, authorize("SHELTER"), approveAdoption);
+
 router.patch("/:id/reject", authenticate, authorize("SHELTER"), rejectAdoption);
 
-// Apenas SUPER USER
 router.get("/", authenticate, getAllAdoptions);
-router.delete("/:id", authenticate, authorize(), deleteAdoption);
 
+router.delete("/:id", authenticate, deleteAdoption);
 
 export default router;

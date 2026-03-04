@@ -77,4 +77,14 @@ export class ShelterService {
     }
     await this.userService.canUpdateShelter(shelter.userId, userId);
   }
+  
+  async getShelterByUserId(userId: number) {
+    const shelter = await this.repo.getShelterByUserId(userId);
+
+    if (!shelter) {
+      throw new NotFoundError("Abrigo não encontrado para este usuário");
+    }
+
+    return shelter;
+  }
 }

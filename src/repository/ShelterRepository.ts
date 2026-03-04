@@ -37,4 +37,10 @@ export class ShelterRepository {
     }
     return null;
   }
+
+  async getShelterByUserId(userId: number) {
+    return await Shelter.findOne({
+      where: { userId }
+    });
+  }
 }
