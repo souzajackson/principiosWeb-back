@@ -86,9 +86,8 @@ Animal.init(
     },
 
     personality: {
-      type: DataTypes.JSON, // suporta array de strings
+      type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: [],
     },
 
     healthStatus: {

@@ -13,12 +13,12 @@ const mapAnimalToResponse = (animal: any) => {
   return {
     id: animal.id,
     name: animal.name,
-    type: animal.species, // já está dog | cat
+    species: animal.species, // já está dog | cat
     breed: animal.breed,
     age: animal.age,
     gender: animal.gender,
     size: animal.size,
-    imageUrl: animal.photoUrl,
+    photoUrl: animal.photoUrl,
     description: animal.description,
     personality: animal.personality ?? [],
     healthStatus: animal.healthStatus ?? "",
@@ -53,7 +53,7 @@ export const createAnimal = async (
       age,
       gender,
       breed,
-      image,            // ← vem do front
+      photoUrl,            // ← vem do front
       description,
       size,
       personality,
@@ -68,10 +68,10 @@ export const createAnimal = async (
       age: Number(age),
       gender,
       breed,
-      photoUrl: image,  // ← mapeamento correto
+      photoUrl: photoUrl,  // ← mapeamento correto
       description: description || "",
       size: size || "Médio",
-      personality: personality ? [personality] : [],
+      personality: personality,
       healthStatus: healthStatus || "Saudável",
       vaccinated: vaccinated ?? false,
       neutered: neutered ?? false,
