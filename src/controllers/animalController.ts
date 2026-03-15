@@ -27,6 +27,7 @@ const mapAnimalToResponse = (animal: any) => {
     shelterName: animal.shelter?.name ?? "",
     shelterPhone: animal.shelter?.phone ?? "",
     shelterEmail: animal.shelter?.email ?? "", // ainda não existe no model
+    shelterId: animal.shelter?.id ?? -1,
     location: animal.shelter?.address ?? "",
   };
 };
