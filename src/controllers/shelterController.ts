@@ -63,6 +63,26 @@ export const getShelterById = async (
   }
 };
 
+export const getMyShelter = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  console.log("id", ((req as any).user).id)
+  try {
+    const user = (req as any).user;
+    const shelter = await service.getShelterByUserId(Number(user.id));
+    return res.json(shelter);
+  } catch (error) {
+    if (error instanceof NotFoundError) {
+      return next(error);
+    }
+    
+    console.error("Error fetching shelter:", error);
+    return res.status(500).json({ message: "Error fetching shelter" });
+  }
+};
+
 export const updateShelter = async (
   req: Request,
   res: Response,
