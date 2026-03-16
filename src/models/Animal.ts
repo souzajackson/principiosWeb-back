@@ -3,8 +3,8 @@ import sequelize from "../config/database";
 import { Shelter } from "./Shelter";
 
 export enum AnimalSpecies {
-  DOG = "dog",
-  CAT = "cat",
+  DOG = "Cachorro",
+  CAT = "Gato",
 }
 
 export enum AnimalGender {
