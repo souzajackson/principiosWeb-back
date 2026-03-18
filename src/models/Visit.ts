@@ -1,6 +1,7 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../config/database";
 import { Shelter } from "./Shelter";
+import { User } from "./User";
 
 export class Visit extends Model {
   declare id: number;
@@ -9,6 +10,7 @@ export class Visit extends Model {
   declare date: Date;
 
   declare shelter?: Shelter;
+  declare visitor?: User;
 }
 
 Visit.init(

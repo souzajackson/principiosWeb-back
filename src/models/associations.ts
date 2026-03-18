@@ -20,4 +20,13 @@ export function setUpAssociations() {
     foreignKey: 'shelterId',
     as: 'visits',
   });
+  Visit.belongsTo(User, {
+    foreignKey: 'userId',
+    as: 'visitor',
+  });
+
+  User.hasMany(Visit, {
+    foreignKey: 'userId',
+    as: 'visits',
+  });
 }

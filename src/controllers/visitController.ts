@@ -47,28 +47,62 @@ export const deleteVisit = async (req: Request, res: Response) => {
   }
 };
 
+
 export const getMyVisits = async (req: Request, res: Response) => {
   try {
     const user = (req as any).user;
-    const visits = await service.getVisitsByUserId(Number(user.id));
-    console.log(visits)
-    res.json(
-      visits.map((visit: any) => ({
-        id: visit.id,
-        userId: visit.userId,
-        shelterId: visit.shelterId,
-        date: visit.date,
-        shelter: visit.shelter
-          ? {
-              id: visit.shelter.id,
-              name: visit.shelter.name,
-              address: visit.shelter.address,
-              phone: visit.shelter.phone,
-            }
-          : null,
-      }))
+
+    const visits = await service.getVisitsByUserId(
+      Number(user.id),
+      String(user.role)
     );
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching visits", error });
+
+    if (user.role === "USER") {
+      return res.json(
+        visits.map((visit: any) => ({
+          id: visit.id,
+          userId: visit.userId,
+          shelterId: visit.shelterId,
+          date: visit.date,
+          shelter: visit.shelter
+            ? {
+                id: visit.shelter.id,
+                name: visit.shelter.name,
+                address: visit.shelter.address,
+                phone: visit.shelter.phone,
+              }
+            : null,
+        }))
+      );
+    } else {
+      return res.json(
+        visits.map((visit: any) => ({
+          id: visit.id,
+          visitDate: visit.date,
+          visitTime: new Date(visit.date).toLocaleTimeString("pt-BR", {
+            hour: "2-digit",
+            minute: "2-digit",
+            timeZone: "America/Fortaleza",
+          }),
+          requestDate: visit.date,
+          status: "confirmed",
+          visitor: visit.visitor
+            ? {
+                id: visit.visitor.id,
+                name: visit.visitor.name,
+                email: visit.visitor.email,
+                phone: "",
+                address: "",
+              }
+            : null,
+        }))
+      );
+    }
+  } catch (error: any) {
+    console.error("Error fetching visits:", error);
+    res.status(500).json({
+      message: "Error fetching visits",
+      error: error?.message ?? error,
+    });
   }
 };

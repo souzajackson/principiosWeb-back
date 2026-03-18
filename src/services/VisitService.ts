@@ -34,9 +34,14 @@ export class VisitService {
     return this.repo.createVisit(data)
   }
 
-  async getVisitsByUserId(id: number) {
+  async getVisitsByUserId(id: number, role: string) {
     await this.userService.verifyID(id);
-    return this.repo.getVisitsByUserId(id);
+    if(role == 'USER') {
+      return this.repo.getVisitsByUserId(id);
+    }else{
+      const shelter = await this.shelterService.getShelterByUserId(id);
+      return this.repo.getVisitsByShelterId(shelter.id);     
+    }
   }
 
   async verifyID(id: number) {

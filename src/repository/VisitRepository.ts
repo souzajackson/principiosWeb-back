@@ -31,4 +31,17 @@ export class VisitRepository {
       order: [['date', 'ASC']],
     });
   }
+
+  async getVisitsByShelterId(shelterId: number) {
+    return Visit.findAll({
+      where: { shelterId },
+      include: [
+        {
+          association: 'visitor',
+          attributes: ['id', 'name', 'email'],
+        },
+      ],
+      order: [['date', 'ASC']],
+    });
+  }
 }
