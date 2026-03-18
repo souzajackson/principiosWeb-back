@@ -1,11 +1,14 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../config/database";
+import { Shelter } from "./Shelter";
 
 export class Visit extends Model {
   declare id: number;
   declare userId: number;
   declare shelterId: number;
   declare date: Date;
+
+  declare shelter?: Shelter;
 }
 
 Visit.init(

@@ -8,6 +8,7 @@ import donationRoutes from "./routes/DonationRoutes";
 import visitRoutes from "./routes/VisitRoutes";
 import authRoutes from './routes/AuthRoutes';
 import sequelize from "./config/database";
+import { setUpAssociations } from "./models/associations";
 import { errorHandler } from "./middleware/errorHandler";
 import cors, { type CorsOptions } from 'cors';
 
@@ -43,6 +44,7 @@ app.use((req, res, next) => {
   console.log(`📦 Body parseado:`, req.body);
   next();
 });
+setUpAssociations();
 
 // Usa as rotas
 app.use("/users", userRoutes);

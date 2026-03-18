@@ -34,6 +34,11 @@ export class VisitService {
     return this.repo.createVisit(data)
   }
 
+  async getVisitsByUserId(id: number) {
+    await this.userService.verifyID(id);
+    return this.repo.getVisitsByUserId(id);
+  }
+
   async verifyID(id: number) {
     const visit = await this.repo.getVisitById(id);
     if(!visit) throw new NotFoundError("Não existe visita com esse ID");

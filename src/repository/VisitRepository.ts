@@ -1,3 +1,4 @@
+import { Shelter } from "../models/Shelter";
 import { Visit } from "../models/Visit";
 
 export class VisitRepository {
@@ -16,5 +17,18 @@ export class VisitRepository {
 
   async deleteVisit(id: number) {
     return await Visit.destroy({ where: { id } });
+  }
+
+  async getVisitsByUserId(id: number) {
+    return Visit.findAll({
+      where: { userId: id },
+      include: [
+        {
+          association: 'shelter',
+          attributes: ['id', 'name', 'address', 'phone'],
+        },
+      ],
+      order: [['date', 'ASC']],
+    });
   }
 }
